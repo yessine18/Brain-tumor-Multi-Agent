@@ -1,0 +1,46 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Generated reports
+reports/*
+!reports/.gitkeep
+
+# Static results
+static/results/*
+!static/results/.gitkeep
+
+# Model files (too large for git)
+models/*.keras
+models/*.h5
+models/*.pb
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Neo4j
+neo4j_data/
