@@ -5,9 +5,9 @@ A medical image analysis system using **Multi-Agent Architecture**, **LangChain*
 ## 🎯 Features
 
 - **Multi-Agent AI System**: Three specialized AI agents working together
-  - 🤖 **Classification Agent**: Uses VGG19 deep learning model to detect tumors
-  - 🧑‍⚕️ **Medical Expert Agent**: Provides medical explanations using Neo4j knowledge base
-  - 📋 **Report Generator Agent**: Creates comprehensive medical reports
+  - 🤖 **Classification Agent**: Binary classification (Tumor vs Normal) using VGG19 + Grad-CAM visualization
+  - 🧑‍⚕️ **Explanation Agent**: Queries Neo4j knowledge graph and generates medical insights via Groq LLM
+  - 📋 **Report Generation Agent**: Synthesizes comprehensive medical reports
 
 - **Explainable AI**: Grad-CAM visualizations showing which brain regions influenced the diagnosis
 - **Knowledge Base**: Neo4j graph database with medical information about brain tumors
@@ -136,36 +136,37 @@ Environment variables in `.env`:
                   Grad-CAM                 Medical Context      (Llama 3.3 70B)
 ```
 
-### Classification Agent
-- Loads VGG19 model
-- Preprocesses MRI image
-- Runs binary classification (Tumor/Normal)
-- Generates Grad-CAM visualization
-- Returns confidence score
+### Agent 1: Classification
+- Loads VGG19 binary classification model (Tumor vs Normal)
+- Preprocesses MRI image (224x224)
+- Runs tumor detection
+- Generates Grad-CAM heatmap visualization
+- Returns confidence score and tumor detection status
 
-### Medical Expert Agent
-- Queries Neo4j knowledge base for:
-  - Common symptoms
+### Agent 2: Explanation
+- Queries Neo4j knowledge graph database for:
+  - Brain tumor symptoms
   - Causes and risk factors
-  - Treatment options
+  - Available treatments
   - Diagnostic methods
-- Provides medical context to LLM
+- Feeds structured medical data to Groq LLM (Llama 3.3 70B)
+- Generates medical interpretation and recommendations
 
-### Report Generator Agent
-- Synthesizes all information
-- Uses Groq LLM (Llama 3.3 70B) to create:
+### Agent 3: Report Generation
+- Synthesizes classification results, Grad-CAM visuals, and medical explanations
+- Uses Groq LLM to create professional medical report with:
   - Executive summary
-  - Classification results
-  - Visual analysis interpretation
-  - Medical explanation
+  - Diagnostic results with confidence levels
+  - Visual analysis (Grad-CAM interpretation)
+  - Medical explanation and context
   - Treatment recommendations
-  - Disclaimers
+  - Next steps and disclaimers
 
-## 📊 API Endpoints
+## API Endpoints
 
 - `GET /` - Web interface
-- `POST /upload` - Upload MRI scan
-- `POST /analyze` - Run analysis
+- `POST /upload` - Upload MRI scan (accepts optional patient info)
+- `POST /analyze` - Run analysis (accepts patient info JSON)
 - `GET /init-knowledge-base` - Initialize Neo4j knowledge base
 - `GET /health` - Health check
 - `GET /reports/<filename>` - Download report
@@ -187,7 +188,7 @@ Error: Couldn't connect to localhost:7688
 - Start container: `docker start neo4j`
 - Check ports: Neo4j should be on 7475 (HTTP) and 7688 (Bolt)
 
-### NumPy Version Error
+### NumPy / TensorFlow Error
 ```
 AttributeError: _ARRAY_API not found
 ```
@@ -214,15 +215,14 @@ Error: Invalid API key
 
 This project is for educational and research purposes only. Not intended for clinical diagnosis.
 
-## 🎓 Technologies
+## Tech Stack
 
-- **VGG19**: Transfer learning for tumor classification
-- **Grad-CAM**: Explainable AI visualization
-- **LangChain**: LLM orchestration
-- **Groq**: Fast LLM inference (Llama 3.3 70B)
-- **Neo4j**: Medical knowledge graph database
-- **Flask**: Web application framework
-- **TensorFlow/Keras**: Deep learning framework
+- TensorFlow/Keras (VGG19) — image classification
+- Grad-CAM — explainability
+- LangChain — orchestration
+- Groq LLM (Llama 3.3 70B) — medical text generation
+- Neo4j — medical knowledge graph
+- Flask — web server
 
 ---
 
