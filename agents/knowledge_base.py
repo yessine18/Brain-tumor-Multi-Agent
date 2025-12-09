@@ -3,6 +3,7 @@ Neo4j Knowledge Base for Brain Tumor Medical Information
 """
 
 from neo4j import GraphDatabase
+from neo4j.exceptions import ServiceUnavailable
 from typing import List, Dict
 import logging
 
@@ -21,7 +22,20 @@ class MedicalKnowledgeBase:
             username: Database username
             password: Database password
         """
-        self.driver = GraphDatabase.driver(uri, auth=(username, password))
+        self.driver = GraphDatabase.driver(uri, auth=(username, password), encrypted=False)
+        import time
+        last_err = None
+        for attempt in range(5):
+            try:
+                self.driver.verify_connectivity()
+                last_err = None
+                break
+            except Exception as e:
+                last_err = e
+                logger.warning(f"Neo4j connectivity attempt {attempt+1}/5 failed: {e}")
+                time.sleep(2)
+        if last_err:
+            raise last_err
         
     def close(self):
         """Close the database connection"""

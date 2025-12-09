@@ -1,6 +1,6 @@
 """
 Flask Web Application for Brain Tumor Analysis
-Multi-Agent System with CrewAI
+Multi-Agent System
 """
 
 from flask import Flask, render_template, request, jsonify, send_from_directory, session
@@ -14,20 +14,16 @@ from config import Config
 from agents.crew import create_crew
 from agents.knowledge_base import get_knowledge_base
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Ensure required directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['REPORTS_FOLDER'], exist_ok=True)
 os.makedirs('static/results', exist_ok=True)
 
-# Initialize the crew (will be lazy-loaded)
 crew = None
 
 
@@ -41,8 +37,8 @@ def get_crew():
     """Lazy load the crew instance"""
     global crew
     if crew is None:
-        logger.info("Initializing CrewAI multi-agent system...")
-        crew = create_crew(app.config)
+        logger.info("Initializing multi-agent system...")
+        crew = create_crew()
         logger.info("Crew initialized successfully")
     return crew
 
@@ -163,7 +159,7 @@ def download_report(filename):
     return send_from_directory(app.config['REPORTS_FOLDER'], filename, as_attachment=True)
 
 
-@app.route('/init-knowledge-base', methods=['POST'])
+@app.route('/init-knowledge-base', methods=['GET', 'POST'])
 def init_knowledge_base():
     """Initialize the Neo4j knowledge base (admin function)"""
     try:

@@ -1,12 +1,10 @@
 """
 Multi-Agent System for Brain Tumor Analysis
-Simplified version without CrewAI dependency (compatible with Python 3.9)
 """
 
 from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
-from typing import Dict, List
-import os
+from typing import Dict
 from datetime import datetime
 
 from models.classifier import BrainTumorClassifier
@@ -14,10 +12,8 @@ from agents.knowledge_base import get_knowledge_base
 from config import Config
 
 
-
-
 class BrainTumorCrew:
-    """Multi-agent system for brain tumor analysis (simplified without CrewAI)"""
+    """Multi-agent system for brain tumor analysis"""
     
     def __init__(self, config: Config):
         self.config = config

@@ -1,6 +1,5 @@
 """
 Brain Tumor Classification Model
-Extracted from binary_classification.ipynb
 """
 
 import numpy as np
@@ -9,7 +8,7 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing import image
 import cv2
 import matplotlib.pyplot as plt
-from typing import Tuple, Dict
+from typing import Dict
 import os
 
 class BrainTumorClassifier:
@@ -104,7 +103,7 @@ class BrainTumorClassifier:
         
         # Create a model that maps the input image to the activations of the last conv layer
         grad_model = keras.models.Model(
-            [self.model.inputs],
+            self.model.inputs,
             [self.model.get_layer(last_conv_layer_name).output, self.model.output]
         )
         
