@@ -12,7 +12,7 @@ from typing import Dict
 import os
 
 class BrainTumorClassifier:
-    """Brain tumor classification using VGG19 model"""
+    """Binary brain tumor classification using VGG19 model (Tumor vs Normal)"""
     
     def __init__(self, model_path: str):
         """

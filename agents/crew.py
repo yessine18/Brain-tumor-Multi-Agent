@@ -13,14 +13,19 @@ from config import Config
 
 
 class BrainTumorCrew:
-    """Multi-agent system for brain tumor analysis"""
+    """
+    Multi-agent system for brain tumor analysis
+    
+    Agent 1: Classification - Binary classification (Tumor vs Normal) with Grad-CAM visualization
+    Agent 2: Explanation - Medical context from Neo4j knowledge graph + LLM analysis
+    Agent 3: Report Generation - Comprehensive medical report synthesis
+    """
     
     def __init__(self, config: Config):
         self.config = config
         
-        # Use Groq API (faster and has free tier)
         self.llm = ChatGroq(
-            model="llama-3.3-70b-versatile",  # Fast and accurate model
+            model="llama-3.3-70b-versatile",
             temperature=0.7,
             api_key=config.GROQ_API_KEY
         )
@@ -36,7 +41,7 @@ class BrainTumorCrew:
         )
     
     def agent_classify(self, image_path: str) -> Dict:
-        """Agent 1: Classification Agent"""
+        """Agent 1: Classification Agent - Binary tumor detection with Grad-CAM visualization"""
         # Run classification
         result = self.classifier.predict(image_path)
         
@@ -74,7 +79,7 @@ Model Information:
         }
     
     def agent_explain(self, classification_result: Dict) -> Dict:
-        """Agent 2: Medical Explanation Agent"""
+        """Agent 2: Explanation Agent - Queries Neo4j knowledge graph and generates medical insights"""
         # Query knowledge base
         kb_info = self.kb.query_tumor_information(classification_result['tumor_detected'])
         
@@ -131,7 +136,7 @@ Knowledge Base Statistics:
         }
     
     def agent_report(self, classification_data: Dict, explanation_data: Dict, patient_info: Dict = None) -> str:
-        """Agent 3: Report Generation Agent"""
+        """Agent 3: Report Generation Agent - Synthesizes comprehensive medical report"""
         # Create comprehensive report prompt
         prompt = PromptTemplate(
             input_variables=["patient_info", "classification", "explanation", "timestamp"],

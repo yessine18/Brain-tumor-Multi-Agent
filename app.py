@@ -104,7 +104,17 @@ def analyze():
     """Run the multi-agent analysis"""
     try:
         filepath = session.get('current_image')
-        patient_info = session.get('patient_info')
+        # Prefer patient info from request body; fall back to session
+        incoming = request.get_json(silent=True) or {}
+        if any(incoming.get(k) for k in ['patient_name', 'patient_age', 'patient_gender']):
+            patient_info = {
+                'name': incoming.get('patient_name') or 'N/A',
+                'age': incoming.get('patient_age') or 'N/A',
+                'gender': incoming.get('patient_gender') or 'N/A'
+            }
+            session['patient_info'] = patient_info
+        else:
+            patient_info = session.get('patient_info')
         
         if not filepath or not os.path.exists(filepath):
             return jsonify({'error': 'No image file found. Please upload an image first.'}), 400

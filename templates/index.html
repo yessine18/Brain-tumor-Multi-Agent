@@ -471,7 +471,12 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify({
+                        patient_name: document.getElementById('patientName').value,
+                        patient_age: document.getElementById('patientAge').value,
+                        patient_gender: document.getElementById('patientGender').value
+                    })
                 });
 
                 const data = await response.json();
